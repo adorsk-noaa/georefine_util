@@ -17,16 +17,13 @@ function(_, _s){
 				
 				if (label_type == 'numeric_histogram'){
 					_.each(leafs, function(leaf){
-						var matches = leaf.label.match(/(.*) to (.*)/);
-						if (matches.length > 1){
-							leaf.min = parseFloat(matches[1]);
-							leaf.max = parseFloat(matches[2]);
-							leaf.label = _s.sprintf("%.1f to %.1f", leaf.min, leaf.max);
-						}
+						leaf.label = leaf.label.replace(/(\-?\d+(\.\d*)?)/g, function(r){ 
+							return parseFloat(r).toPrecision(3)
+						});
 					}, this);
 
 					var sorted_leafs = _.sortBy(leafs, function(leaf){
-						return leaf.min;
+						return leaf.id;
 					}, this);
 
 					return sorted_leafs;
