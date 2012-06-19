@@ -14,10 +14,23 @@ function(_, _s){
 			// Post-process leafs, depending on label type.
 			if (leafs.length > 0){
 				var label_type = leafs[0].label_type  || 'alpha';
+
+				var numbers_re = new RegExp(/(\-?\d+(\.\d*)?)/g);
 				
 				if (label_type == 'numeric_histogram'){
 					_.each(leafs, function(leaf){
-						leaf.label = leaf.label.replace(/(\-?\d+(\.\d*)?)/g, function(r){ 
+
+						// Get min/max from labels.
+						var matches = leaf.label.match(numbers_re);
+						if (matches){
+							leaf.min = parseFloat(matches[0]);
+							if (matches.length > 1){
+								leaf.max = parseFloat(matches[1]);
+							}
+						}
+
+						// Format labels.
+						leaf.label = leaf.label.replace(numbers_re, function(r){ 
 							return parseFloat(r).toPrecision(3)
 						});
 					}, this);
