@@ -12,6 +12,10 @@ function($, SimpleInterpreter, LumberjackInterpreter){
 			$parent= $(el).parent();
 			$(el).css('width', $parent.width());
 			$(el).css('height', $parent.height());
+		},
+		"unsetWidthHeight": function(el){
+			$(el).css('width', '');
+			$(el).css('height', '');
 		}
 
 	};
