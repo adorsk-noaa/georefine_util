@@ -18,6 +18,7 @@ function($, Backbone, _, ui, _s, template){
 			$(this.el).addClass('info-select');
 			this.initialRender();
 			this.model.on("change:selection", this.onChangeSelection, this);
+			this.model.on("change:choices", this.renderChoices, this);
 		},
 
 		initialRender: function(){
@@ -32,7 +33,7 @@ function($, Backbone, _, ui, _s, template){
             this.$info_list.empty();
 
             _.each(this.model.get('choices'), function(choice){
-                var $opt = $(_s.sprintf('<option value="%s">%s</option>', choice.id, choice.label));
+                var $opt = $(_s.sprintf('<option value="%s">%s</option>', choice.value, choice.label));
                 $opt.appendTo(this.$select);
                 var $info = $(_s.sprintf('<li>%s</li>', choice.info));
                 $info.appendTo(this.$info_list);
