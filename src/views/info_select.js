@@ -4,9 +4,10 @@ define([
 	"use!underscore",
 	"use!ui",
 	"_s",
+	"use!uiExtras",
 	"text!./templates/info_select.html"
 		],
-function($, Backbone, _, ui, _s, template){
+function($, Backbone, _, ui, _s, uiExtras, template){
 
 	var InfoSelectView = Backbone.View.extend({
 
@@ -19,12 +20,15 @@ function($, Backbone, _, ui, _s, template){
 			this.initialRender();
 			this.model.on("change:selection", this.onChangeSelection, this);
 			this.model.on("change:choices", this.renderChoices, this);
+
+            this.on("ready resizeStop", this.resize, this);
 		},
 
 		initialRender: function(){
 			$(this.el).html(_.template(template));
             this.$select = $('.info-select-select', this.el);
             this.$info_list = $('.info-select-info-list', this.el);
+            this.resize();
             this.renderChoices();
         },
 
@@ -38,6 +42,8 @@ function($, Backbone, _, ui, _s, template){
                 var $info = $(_s.sprintf('<li>%s</li>', choice.info));
                 $info.appendTo(this.$info_list);
             }, this);
+
+            this.$select.selectmenu({});
         },
 
         onSelectChange: function(){
@@ -46,7 +52,17 @@ function($, Backbone, _, ui, _s, template){
 
         onChangeSelection: function(arguments){
             this.$select.val(this.model.get('selection'));
-        }
+        },
+
+        resize: function(){
+            // Set widths explicitly.
+            var info_width = $('.info-container', this.el).width();
+            var select_width = $(this.el).width() - info_width;
+            $('.select-container', this.el).width(select_width);
+            this.$select.width(select_width);
+            $('.select-container .ui-selectmenu', this.el).width(select_width);
+            this.$select.selectmenu({'width': select_width});
+        },
 
 	});
 
