@@ -1,9 +1,7 @@
 define([
-        'jquery',
-        './simple_interpreter',
-        './lumberjack_interpreter',
+        'jquery'
         ], 
-function($, SimpleInterpreter, LumberjackInterpreter){
+function($){
 
     util = {
         'SimpleInterpreter': SimpleInterpreter,
