@@ -51,7 +51,7 @@ function($, Backbone, _, ui, _s, uiExtras, template){
         },
 
         onChangeSelection: function(arguments){
-            this.$select.val(this.model.get('selection'));
+            this.$select.selectmenu("value", this.model.get('selection'));
         },
 
         resize: function(){
