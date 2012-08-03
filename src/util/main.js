@@ -1,7 +1,8 @@
 define([
-        'jquery'
+        'jquery',
+        '_s'
         ], 
-function($){
+function($, _s){
 
     util = {
         fillParent: function(el){
