@@ -56,12 +56,14 @@ function($, Backbone, _, ui, _s, uiExtras, template){
 
         resize: function(){
             // Set widths explicitly.
-            var info_width = $('.info-container', this.el).width();
-            var select_width = $(this.el).width() - info_width;
-            $('.select-container', this.el).width(select_width);
+            var $inner = $('> .inner', this.el);
+            var info_width = $('.info-container', this.el).outerWidth(true);
+            var select_width = $inner.width() - info_width;
+            $('.select-container', this.el).outerWidth(select_width);
             this.$select.width(select_width);
-            $('.select-container .ui-selectmenu', this.el).width(select_width);
-            this.$select.selectmenu({'width': select_width});
+            $selectMenu = $('.select-container .ui-selectmenu', this.el);
+            $selectMenu.outerWidth(select_width);
+            this.$select.selectmenu({'width': $selectMenu.width()});
         },
 
 	});

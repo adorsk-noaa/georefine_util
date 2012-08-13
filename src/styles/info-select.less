@@ -1,13 +1,29 @@
 .info-select{
-    > table{
-        border-collapse: collapse;
-        border-spacing: 0;
-    }
-    .info-container {
-        width: 32px;
-        .info-button {
-            .content {
-                display: none;
+    padding: 2px;
+
+    > .inner{
+
+        > .table{
+            width: 100%;
+            display: table;
+
+            > .row {
+                display: table-row;
+
+                > .cell {
+                    display: table-cell;
+                    padding: 3px;
+                }
+
+                .info-container {
+                    display: inline-block;
+                    width: 32px;
+                    .info-button {
+                        .content {
+                            display: none;
+                        }
+                    }
+                }
             }
         }
     }
