@@ -33,6 +33,22 @@ function($){
             number = sign * Math.round(absNumber*decPlaces/size)/decPlaces;
             var suffix = (i == -2) ? suffixes[0] : suffixes[i+1];
             return number.toString() + suffix;
+        },
+
+        "friendlyBytes": function(bytes) {
+            bytes = parseFloat(bytes);
+            if (isNaN(bytes)){
+                return;
+            }
+            var value = bytes;
+            var suffix = "B";
+            if (bytes > 1024){
+                var exp = (Math.log(bytes) / Math.log(1024));
+                var suffix = "KMGTPE".charAt(exp - 1);
+                var value = (bytes/Math.pow(1024, exp));
+                value = value.toPrecision(1);
+            }
+            return value + suffix + "B";
         }
     };
 
