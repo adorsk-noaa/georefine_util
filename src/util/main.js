@@ -41,14 +41,14 @@ function($){
                 return;
             }
             var value = bytes;
-            var suffix = "B";
+            var suffix = "";
             if (bytes > 1024){
-                var exp = (Math.log(bytes) / Math.log(1024));
+                var exp = parseInt((Math.log(bytes) / Math.log(1024)));
                 var suffix = "KMGTPE".charAt(exp - 1);
                 var value = (bytes/Math.pow(1024, exp));
-                value = value.toPrecision(1);
+                value = value.toFixed(1);
             }
-            return value + suffix + "B";
+            return value + ' ' + suffix + 'B';
         }
     };
 
