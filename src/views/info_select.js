@@ -1,10 +1,10 @@
 define([
 	"jquery",
-	"use!backbone",
-	"use!underscore",
-	"use!ui",
+	"backbone",
+	"underscore",
+	"ui",
 	"_s",
-	"use!uiExtras",
+	"uiExtras",
 	"text!./templates/info_select.html"
 		],
 function($, Backbone, _, ui, _s, uiExtras, template){
