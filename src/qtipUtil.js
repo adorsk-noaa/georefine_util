@@ -19,7 +19,9 @@ function($, qtip){
         show: {
           ready: true
         },
-        hide: false,
+        hide: {
+          event: 'unfocus'
+        },
         style: {
           classes: 'errortip'
         }
