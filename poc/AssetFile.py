@@ -32,4 +32,18 @@ assets = {
         'source': 'https://github.com/Craga89/qTip2.git',
         'path': 'dist'
     },
+    'underscore.string.js': {
+        'type': 'git',
+        'source': 'https://github.com/adorsk/underscore.string.git',
+        'path': 'lib/underscore.string.js'
+    },
+    'underscore.js': {
+        'type': 'git',
+        'source': 'https://github.com/documentcloud/underscore.git'
+    },
+    'backbone.js': {
+        'type': 'git',
+        'source': 'https://github.com/documentcloud/backbone.git',
+        'path': 'backbone.js'
+    },
 }
