@@ -35,7 +35,8 @@ function($, qTipUtilCSS, MinMaxFormView){
     cssDeferred.done(function(){
       var mmModel = new Backbone.Model({
         mid: 0,
-        r: 1
+        r: 1,
+        auto: false,
       });
       var mmView = new MinMaxFormView({
         model: mmModel,
@@ -43,14 +44,12 @@ function($, qTipUtilCSS, MinMaxFormView){
         attrs: {
           mid: 'mid',
           r: 'r',
-          midAuto: 'midAuto',
-          rAuto: 'rAuto'
+          auto: 'auto'
         },
         selectors: {
           mid: '.mid input[type="text"]',
           r: '.r input[type="text"]',
-          midAuto: '.mid input[type="checkbox"]',
-          rAuto: '.r input[type="checkbox"]',
+          auto: '.auto input[type="checkbox"]',
         }
       });
     });

@@ -14,51 +14,51 @@ function($, Backbone, _,  _s, qtipUtil, validators){
     initialize: function(opts){
       $.extend(true, {
         attrs: {
-          mid: 'vmid',
+          mid: 'mid',
           r: 'r',
-          midAuto: 'midAuto',
-          rAuto: 'rAuto',
+          auto: 'auto',
         },
         selectors: {
           mid: '.mid input[type="text"]',
-          midAuto: '.mid input[type="checkbox"]',
           r: '.r input[type="text"]',
-          rAuto: '.r input[type="checkbox"]',
+          auto: '.auto input[type="checkbox"]',
         }
       }, opts);
       this.opts = opts;
 
-      this.attrs = ['mid', 'r']; 
-
       $(this.el).addClass('plusminus-form');
 
       // Set initial properties on inputs.
-      _.each(this.attrs, function(attr){
+      _.each(['mid', 'r'], function(attr){
         this.setText(attr);
-        this.setCheckbox(attr);
-      },this);
+      }, this);
+      this.setCheckbox('auto');
 
       // Listen for model changes.
-      _.each(this.attrs, function(attr){
-        var mappedAttr = this.opts.attrs[attr];
-        var autoAttr = this.opts.attrs[attr + 'Auto'];
-        this.model.on('change:' + mappedAttr, function(){
-          this.setText(attr)
-        }, this);
-        this.model.on('change:' + autoAttr, function(){
-          this.setCheckbox(attr)
-        }, this);
+      _.each(this.opts.attrs, function(attr, mappedAttr){
+        var fn;
+        if (attr == 'auto'){
+          fn = function(){this.setCheckbox(attr)};
+        }
+        else{
+          fn = function(){this.setText(attr)};
+        }
+        this.model.on('change:' + mappedAttr, fn, this);
       }, this);
 
       // Listen for input changes.
-      _.each(this.attrs, function(attr){
+      _.each(this.opts.attrs, function(attr){
         var _this = this;
-        $(this.opts.selectors[attr], this.el).on('change', {attr: attr}, function(e){
-          _this.onTextChange(e);
-        });
-        $(this.opts.selectors[attr+ 'Auto'], this.el).on('change', {attr: attr}, function(e){
-          _this.onCheckboxChange(e);
-        });
+        if (attr == 'auto'){
+          $(this.opts.selectors[attr], this.el).on('change', {attr: attr}, function(e){
+            _this.onCheckboxChange(e);
+          });
+        }
+        else{
+          $(this.opts.selectors[attr], this.el).on('change', {attr: attr}, function(e){
+            _this.onTextChange(e);
+          });
+        }
       }, this);
     },
 
@@ -68,7 +68,7 @@ function($, Backbone, _,  _s, qtipUtil, validators){
       var rawVals = {};
       var valid = true;
 
-      $.each(this.attrs, function(i, attr){
+      _.each(['mid', 'r'], function(attr){
         els[attr] = _this.getElements(attr);
         rawVals[attr] = els[attr].$text.val();
         // Check for number.
@@ -91,7 +91,7 @@ function($, Backbone, _,  _s, qtipUtil, validators){
       }
 
       var parsedVals = {};
-      _.each(this.attrs, function(attr){
+      _.each(this.opts.attrs, function(attr){
         parsedVals[attr] = parseFloat(rawVals[attr], 10);
       }, this);
 
@@ -113,40 +113,55 @@ function($, Backbone, _,  _s, qtipUtil, validators){
     },
 
     getElements: function(attr){
-      var $text = $(this.opts.selectors[attr], this.el);
-      var $checkbox = $(this.opts.selectors[attr + 'Auto'], this.el);
-      return {
-        $text: $text,
-        $checkbox: $checkbox
-      };
+      if (attr == 'auto'){
+        return {
+          $checkbox: $(this.opts.selectors[attr], this.el),
+        };
+      }
+      else{
+        return {
+          $text: $(this.opts.selectors[attr], this.el),
+        };
+      }
+    },
+
+    disableTextEls: function(){
+      _.each(['mid', 'r'], function(textAttr){
+        var textEls = this.getElements(textAttr);
+        textEls.$text.attr('disabled', 'true');
+        textEls.$text.errorTip('remove');
+      }, this);
+    },
+
+    enableTextEls: function(){
+      _.each(['mid', 'r'], function(textAttr){
+        var textEls = this.getElements(textAttr);
+        textEls.$text.removeAttr('disabled');
+      }, this);
     },
 
     onCheckboxChange: function(e){
       var attr = e.data.attr;
       var attrEls = this.getElements(attr);
-      var autoAttr = this.opts.attrs[attr + 'Auto'];
-      if (attrEls.$checkbox.is(':checked')){
-        this.model.set(autoAttr, true);
-        attrEls.$text.attr('disabled', 'true');
-        attrEls.$text.val(this.model.get(this.opts.attrs[attr]));
-        attrEls.$text.errorTip('remove');
+      var checked = attrEls.$checkbox.is(':checked');
+      if (checked){
+        this.disableTextEls();
       }
       else{
-        attrEls.$text.removeAttr('disabled');
-        this.model.set(autoAttr, false);
+        this.enableTextEls();
       }
+      this.model.set(this.opts.attrs[attr], checked);
     },
 
     setCheckbox: function(attr){
       var attrEls = this.getElements(attr);
-      var autoAttr = this.opts.attrs[attr + 'Auto'];
-      if (this.model.get(autoAttr)){
+      if (this.model.get(this.opts.attrs[attr])){
         attrEls.$checkbox.attr('checked', 'checked');
-        attrEls.$text.attr('disabled', 'true');
+        this.disableTextEls();
       }
       else{
         attrEls.$checkbox.removeAttr('checked');
-        attrEls.$text.removeAttr('disabled');
+        this.enableTextEls();
       }
     }
   });
