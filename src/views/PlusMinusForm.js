@@ -91,7 +91,7 @@ function($, Backbone, _,  _s, qtipUtil, validators){
       }
 
       var parsedVals = {};
-      $.each(this.attrs, function(i, attr){
+      _.each(this.attrs, function(attr){
         parsedVals[attr] = parseFloat(rawVals[attr], 10);
       }, this);
 
