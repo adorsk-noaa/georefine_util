@@ -12,7 +12,8 @@ function($, Backbone, _,  _s, qtipUtil, validators){
   var PlusMinusFormView = Backbone.View.extend({
 
     initialize: function(opts){
-      $.extend(true, {
+      var mergedOpts = {};
+      $.extend(true, mergedOpts, {
         attrs: {
           mid: 'mid',
           r: 'r',
@@ -24,7 +25,7 @@ function($, Backbone, _,  _s, qtipUtil, validators){
           auto: '.auto input[type="checkbox"]',
         }
       }, opts);
-      this.opts = opts;
+      this.opts = mergedOpts;
 
       $(this.el).addClass('plusminus-form');
 
@@ -35,7 +36,7 @@ function($, Backbone, _,  _s, qtipUtil, validators){
       this.setCheckbox('auto');
 
       // Listen for model changes.
-      _.each(this.opts.attrs, function(attr, mappedAttr){
+      _.each(this.opts.attrs, function(mappedAttr, attr){
         var fn;
         if (attr == 'auto'){
           fn = function(){this.setCheckbox(attr)};
@@ -47,18 +48,20 @@ function($, Backbone, _,  _s, qtipUtil, validators){
       }, this);
 
       // Listen for input changes.
-      _.each(this.opts.attrs, function(attr){
-        var _this = this;
+      var _this = this;
+      _.each(this.opts.attrs, function(mappedAttr, attr){
+        var fn;
         if (attr == 'auto'){
-          $(this.opts.selectors[attr], this.el).on('change', {attr: attr}, function(e){
+          fn = function(e){
             _this.onCheckboxChange(e);
-          });
+          };
         }
         else{
-          $(this.opts.selectors[attr], this.el).on('change', {attr: attr}, function(e){
+          fn = function(e){
             _this.onTextChange(e);
-          });
+          };
         }
+        $(this.opts.selectors[attr], this.el).on('change', {attr: attr}, fn);
       }, this);
     },
 
@@ -91,7 +94,7 @@ function($, Backbone, _,  _s, qtipUtil, validators){
       }
 
       var parsedVals = {};
-      _.each(this.opts.attrs, function(attr){
+      _.each(this.opts.attrs, function(mappedAttr, attr){
         parsedVals[attr] = parseFloat(rawVals[attr], 10);
       }, this);
 

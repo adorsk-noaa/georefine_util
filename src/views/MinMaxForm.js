@@ -12,7 +12,8 @@ function($, Backbone, _,  _s, qtipUtil, validators){
   var MinMaxFormView = Backbone.View.extend({
 
     initialize: function(opts){
-      $.extend(true, {
+      var mergedOpts = {};
+      $.extend(true, mergedOpts, {
         attrs: {
           min: 'min',
           max: 'max',
@@ -26,7 +27,7 @@ function($, Backbone, _,  _s, qtipUtil, validators){
           maxAuto: '.max input[type="checkbox"]',
         }
       }, opts);
-      this.opts = opts;
+      this.opts = mergedOpts;
 
       $(this.el).addClass('minmax-form');
 
